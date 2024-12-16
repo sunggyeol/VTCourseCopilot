@@ -76,7 +76,7 @@ Created by [Sung Oh](https://www.sunggyeol.com) - feel free to contact me!
 
 This project is licensed under the MIT License.
 
-## Future Plans
+## Milestones
 
-- Incorporate all Virginia Tech domain-specific datasets
-- Expand to become VT Copilot, not just VT Course Copilot
+- **Milestone 1**: Add Reddit API for in-depth data analysis to help choose the right professor for a course.
+- **Milestone 2**: Develop an academic advisor agent that prompts students to upload a PDF of their HokieGPS. It will then analyze the degree requirements of the student's major and recommend an academic plan.
