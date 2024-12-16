@@ -55,11 +55,14 @@ export const Overview = () => {
           </Link>{" "}
           to provide even more comprehensive insights.
         </p>
+        <p className="text-sm text-gray-500 italic">
+          This tool is not officially affiliated with or endorsed by Virginia Tech.
+        </p>
         <p>
           This project was created by{" "}
           <Link
             className="font-medium"
-            href="https://sunggyeol.com"
+            href="https://sunggyeol.com/about"
             target="_blank"
           >
             Sung Oh

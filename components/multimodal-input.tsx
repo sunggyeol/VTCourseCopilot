@@ -21,14 +21,14 @@ import { Textarea } from "./ui/textarea";
 
 const suggestedActions = [
   {
-    title: "What is the weather",
-    label: "in San Francisco?",
-    action: "What is the weather in San Francisco?",
+    title: "Find best professor",
+    label: "for CS 3114",
+    action: "Help me find the best professor for CS 3114",
   },
   {
-    title: "How is python useful",
-    label: "for AI engineers?",
-    action: "How is python useful for AI engineers?",
+    title: "Highest GPA professor",
+    label: "for MATH 2114",
+    action: "Which professor has given the highest GPA for MATH 2114?",
   },
 ];
 
