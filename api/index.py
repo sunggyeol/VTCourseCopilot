@@ -33,7 +33,7 @@ available_tools = {
 def do_stream(messages: List[ChatCompletionMessageParam]):
     stream = client.chat.completions.create(
         messages=messages,
-        model="gpt-4o",
+        model="gpt-4o-mini",
         stream=True,
         tools=[{
             "type": "function",
@@ -66,7 +66,7 @@ def do_stream(messages: List[ChatCompletionMessageParam]):
                     "properties": {
                         "course": {
                             "type": "string",
-                            "description": "Course code in format 'CS 3114' or 'MATH 2114'",
+                            "description": "Course code in format 'CS 3114' or 'STAT 4705'",
                         },
                     },
                     "required": ["course"],
@@ -83,7 +83,7 @@ def stream_text(messages: List[ChatCompletionMessageParam], protocol: str = 'dat
 
     stream = client.chat.completions.create(
         messages=messages,
-        model="gpt-4o",
+        model="gpt-4o-mini",
         stream=True,
         tools=[{
             "type": "function",
@@ -116,7 +116,7 @@ def stream_text(messages: List[ChatCompletionMessageParam], protocol: str = 'dat
                     "properties": {
                         "course": {
                             "type": "string",
-                            "description": "Course code in format 'CS 3114' or 'MATH 2114'",
+                            "description": "Course code in format 'CS 3114' or 'STAT 4705'",
                         },
                     },
                     "required": ["course"],
