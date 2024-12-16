@@ -1,52 +1,49 @@
-import pandas as pd
-import os
 import json
+import sqlite3
+import os
+from typing import List, Dict, Any
 
-def get_udc(course: str) -> str:
+def get_db_path():
+    """Get the absolute path to the database file"""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(current_dir))
+    return os.path.join(project_root, 'data', 'grade_distribution.db')
+
+def get_course_data(subject: str, course_no: int) -> List[Dict[str, Any]]:
     """
-    Get course information from grade distribution CSV file.
+    Get course data from SQLite database
     
     Args:
-        course (str): Course in format "CS 3114" or "MATH 2114"
-    
+        subject (str): Course subject (e.g., 'CS')
+        course_no (int): Course number (e.g., 3114)
+        
     Returns:
-        str: JSON string containing course information
+        List[Dict[str, Any]]: List of course entries
     """
-    # Split the course string into subject and number
     try:
-        subject, course_no = course.split()
-        course_no = str(course_no)  # Convert to string to ensure consistent type
-    except ValueError:
-        return json.dumps([])
-
-    # Get the absolute path to the CSV file 
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    csv_path = os.path.join(current_dir, '../../data/grade_distribution.csv')
-
-    # Read the CSV file
-    try:
-        df = pd.read_csv(csv_path)
+        db_path = get_db_path()
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
         
-        # Convert Course No. to string and strip any whitespace
-        df['Course No.'] = df['Course No.'].astype(str).str.strip()
+        query = """
+        SELECT * FROM grades 
+        WHERE Subject = ? AND "Course No." = ?
+        ORDER BY "Academic Year" DESC, Term DESC
+        """
+        cursor.execute(query, (subject, course_no))
         
-        # Filter the dataframe based on subject and course number
-        filtered_df = df[
-            (df['Subject'].str.strip() == subject) & 
-            (df['Course No.'].str.strip() == course_no)
-        ]
+        columns = [description[0] for description in cursor.description]
+        course_data = [dict(zip(columns, row)) for row in cursor.fetchall()]
         
-        # Convert filtered dataframe to list of dictionaries
-        result = filtered_df.to_dict('records')
+        conn.close()
+        return course_data
         
-        # Convert to JSON string
-        return json.dumps(result, indent=2)
     except Exception as e:
-        print(f"Error reading CSV file: {e}")
-        return json.dumps([])
+        print(f"Error in get_course_data: {e}")
+        return []
 
-if __name__ == "__main__":
-    # Test the function
-    course = "CS 3114"
-    course_info = get_udc(course)
-    print(course_info)
+def get_unique_professors(course_data: List[Dict[str, Any]]) -> List[str]:
+    """Extract unique professor names from course data"""
+    return list(set(entry.get('Instructor', '') 
+                   for entry in course_data 
+                   if entry.get('Instructor', '').strip()))
