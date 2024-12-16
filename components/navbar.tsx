@@ -1,19 +1,20 @@
 "use client";
 
 import { Button } from "./ui/button";
-import { GitIcon } from "./icons";
 import Link from "next/link";
+import Image from "next/image";
+import sunggyeol_logo from "../data/logo/sunggyeol_logo.svg";
 
 export const Navbar = () => {
   return (
     <div className="p-2 flex flex-row gap-2 justify-between">
-      <Link href="https://github.com/sunggyeol/VTCourseCopilot">
+      <Link href="https://www.sunggyeol.com/about" target="_blank" rel="noopener noreferrer">
         <Button variant="outline">
-          <GitIcon /> View Source Code
+          <Image src={sunggyeol_logo} alt="Logo" width={24} height={24} /> sunggyeol.com
         </Button>
       </Link>
 
-      <Link href="https://vt.collegescheduler.com/s">
+      <Link href="https://vt.collegescheduler.com/s" target="_blank" rel="noopener noreferrer">
       <Button variant="outline">
         Course Registration
       </Button>

@@ -19,7 +19,7 @@ export const Overview = () => {
           <MessageIcon size={32} />
         </p>
         <p>
-          Welcome to <span className="font-medium">VT Course Copilot</span> - your intelligent assistant for finding
+          Welcome to <span className="font-medium">VT Course Copilot</span> - helping you find
           the best professors at{" "}
           <Link
             className="font-medium"
@@ -44,19 +44,7 @@ export const Overview = () => {
           >
             Rate My Professors
           </Link>{" "}
-          to help students make informed decisions about their courses. Future
-          updates will integrate the{" "}
-          <Link
-            className="font-medium"
-            href="https://www.reddit.com/"
-            target="_blank"
-          >
-            Reddit
-          </Link>{" "}
-          to provide even more comprehensive insights.
-        </p>
-        <p>
-          This project was created by{" "}
+          to help students make informed decisions about their courses. This project was created by{" "}
           <Link
             className="font-medium"
             href="https://sunggyeol.com/about"
