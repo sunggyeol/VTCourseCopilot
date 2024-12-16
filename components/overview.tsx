@@ -16,47 +16,53 @@ export const Overview = () => {
     >
       <div className="rounded-xl p-6 flex flex-col gap-8 leading-relaxed text-center max-w-xl">
         <p className="flex flex-row justify-center gap-4 items-center">
-          <LogoPython size={32} />
-          <span>+</span>
           <MessageIcon size={32} />
         </p>
         <p>
-          This is an{" "}
+          Welcome to <span className="font-medium">VT Course Copilot</span> - your intelligent assistant for finding
+          the best professors at{" "}
           <Link
-            className="font-medium underline underline-offset-4"
-            href="https://github.com/vercel-labs/ai-sdk-preview-python-streaming"
+            className="font-medium"
+            href="https://vt.edu/"
             target="_blank"
           >
-            open source
-          </Link>{" "}
-          template that demonstrates the usage of{" "}
-          <Link
-            className="font-medium underline underline-offset-4"
-            href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#data-stream-protocol"
-            target="_blank"
-          >
-            Data Stream Protocol
-          </Link>{" "}
-          to stream chat completions from a Python function (
-          <Link
-            className="font-medium underline underline-offset-4"
-            href="https://fastapi.tiangolo.com"
-            target="_blank"
-          >
-            FastAPI
+            Virginia Tech
           </Link>
-          ) along with the
-          <code className="rounded-md bg-muted px-1 py-0.5">useChat</code> hook
-          on the client to create a seamless chat experience.
+          . It gathers information from{" "}
+          <Link
+            className="font-medium"
+            href="https://udc.vt.edu/irdata/data/courses/grades"
+            target="_blank"
+          >
+            University Data Commons
+          </Link>{" "}
+          and{" "}
+          <Link
+            className="font-medium"
+            href="https://www.ratemyprofessors.com/"
+            target="_blank"
+          >
+            Rate My Professors
+          </Link>{" "}
+          to help students make informed decisions about their courses. Future
+          updates will integrate the{" "}
+          <Link
+            className="font-medium"
+            href="https://www.reddit.com/"
+            target="_blank"
+          >
+            Reddit
+          </Link>{" "}
+          to provide even more comprehensive insights.
         </p>
         <p>
-          You can learn more about the AI SDK by visiting the{" "}
+          This project was created by{" "}
           <Link
-            className="font-medium underline underline-offset-4"
-            href="https://sdk.vercel.ai/docs"
+            className="font-medium"
+            href="https://sunggyeol.com"
             target="_blank"
           >
-            docs
+            Sung Oh
           </Link>
           .
         </p>
