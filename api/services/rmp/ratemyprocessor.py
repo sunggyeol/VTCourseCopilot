@@ -16,7 +16,7 @@ def get_professor_info(professor_name: str) -> str:
         professor = ratemyprofessor.get_professor_by_school_and_name(
             ratemyprofessor.get_school_by_name("Virginia Tech"), professor_name)
         
-        if professor is not None:
+        if professor is not None and professor.school.name == "Virginia Tech":
             # Create dictionary with professor info
             prof_data = {
                 "name": professor.name,

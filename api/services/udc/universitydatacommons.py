@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import json
 
-def get_course_info(course: str) -> str:
+def get_udc(course: str) -> str:
     """
     Get course information from grade distribution CSV file.
     
@@ -48,5 +48,5 @@ def get_course_info(course: str) -> str:
 if __name__ == "__main__":
     # Test the function
     course = "CS 3114"
-    course_info = get_course_info(course)
+    course_info = get_udc(course)
     print(course_info)
