@@ -58,6 +58,18 @@ export const PreviewMessage = ({
   message: Message;
   isLoading: boolean;
 }) => {
+  const [steps, setSteps] = useState([false, false, false, false]);
+
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setSteps(prev => [true, prev[1], prev[2], prev[3]]), 3000),
+      setTimeout(() => setSteps(prev => [prev[0], true, prev[2], prev[3]]), 8000),
+      setTimeout(() => setSteps(prev => [prev[0], prev[1], true, prev[3]]), 13000),
+      setTimeout(() => setSteps(prev => [prev[0], prev[1], prev[2], true]), 18000)
+    ];
+    return () => timers.forEach(timer => clearTimeout(timer));
+  }, []);
+
   return (
     <motion.div
       className="w-full mx-auto max-w-3xl px-4 group/message"
@@ -109,18 +121,6 @@ export const PreviewMessage = ({
                   );
                 }
                 if (state === "call") {
-                  const [steps, setSteps] = useState([false, false, false, false]);
-
-                  useEffect(() => {
-                    const timers = [
-                      setTimeout(() => setSteps(prev => [true, prev[1], prev[2], prev[3]]), 3000),
-                      setTimeout(() => setSteps(prev => [prev[0], true, prev[2], prev[3]]), 8000),
-                      setTimeout(() => setSteps(prev => [prev[0], prev[1], true, prev[3]]), 13000),
-                      setTimeout(() => setSteps(prev => [prev[0], prev[1], prev[2], true]), 18000)
-                    ];
-                    return () => timers.forEach(timer => clearTimeout(timer));
-                  }, []);
-
                   return (
                     <div key={toolCallId} className="text-muted-foreground relative">
                       <motion.div initial={{ opacity: 1 }} animate={{ opacity: 1 }} className="flex items-center gap-2">
