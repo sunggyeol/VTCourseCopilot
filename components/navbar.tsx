@@ -14,9 +14,9 @@ export const Navbar = () => {
       </Link>
 
       <Link href="https://vt.collegescheduler.com/s">
-        <Button>
-          Course Registration
-        </Button>
+      <Button variant="outline">
+        Course Registration
+      </Button>
       </Link>
     </div>
   );

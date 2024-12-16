@@ -27,8 +27,8 @@ const suggestedActions = [
   },
   {
     title: "Highest GPA professor",
-    label: "for MATH 2114",
-    action: "Which professor has given the highest GPA for MATH 2114?",
+    label: "for STAT 4705",
+    action: "Which professor has given the highest GPA for STAT 4705?",
   },
 ];
 

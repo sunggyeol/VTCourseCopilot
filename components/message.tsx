@@ -2,8 +2,8 @@
 
 import type { Message } from "ai";
 import { motion } from "framer-motion";
-
-import { SparklesIcon } from "./icons";
+import { useState, useEffect } from "react";
+import { SparklesIcon, CheckIcon } from "./icons";
 import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { cn } from "@/lib/utils";
@@ -13,42 +13,42 @@ import { CourseInformation } from "./course_information";
 const SAMPLE_COURSE_INFO = {
   course_info: [
     {
-      "Academic Year": "2024",
-      Term: "Fall",
+      "Academic Year": "2023-24",
+      Term: "Spring",
       Subject: "CS",
-      "Course No.": "101",
-      "Course Title": "Introduction to Computer Science",
-      Instructor: "John Doe",
-      GPA: 3.5,
-      "A (%)": 30,
-      "A- (%)": 20,
-      "B+ (%)": 15,
-      "B (%)": 10,
-      "B- (%)": 5,
-      "C+ (%)": 5,
-      "C (%)": 5,
-      "C- (%)": 3,
-      "D+ (%)": 2,
-      "D (%)": 2,
-      "D- (%)": 1,
-      "F (%)": 2,
-      Withdraws: 1,
-      "Graded Enrollment": 100,
-      CRN: 12345,
-      Credits: 3,
-    },
+      "Course No.": 2506,  // Changed to number
+      "Course Title": "Intro to Computer Organization",
+      Instructor: "Nikolopoulos",
+      GPA: 3.18,
+      "A (%)": 26.4,
+      "A- (%)": 13.5,
+      "B+ (%)": 16.9,
+      "B (%)": 15.5,
+      "B- (%)": 12.2,
+      "C+ (%)": 7.4,
+      "C (%)": 2.7,
+      "C- (%)": 2.0,
+      "D+ (%)": 0.7,
+      "D (%)": 0.0,
+      "D- (%)": 0.7,
+      "F (%)": 2.0,
+      Withdraws: 5,
+      "Graded Enrollment": 148,
+      CRN: 13321,
+      Credits: 3
+    }
   ],
   professor_info: [
     {
-      name: "John Doe",
+      name: "Dimitrios Nikolopoulos",
       department: "Computer Science",
-      school: "Engineering",
-      rating: 4.5,
-      difficulty: 3.0,
-      num_ratings: 50,
-      would_take_again: 90,
-    },
-  ],
+      school: "Virginia Tech",
+      rating: 3.6,
+      difficulty: 3.8,
+      num_ratings: 10,
+      would_take_again: 60  // Can be null in real data
+    }
+  ]
 };
 
 export const PreviewMessage = ({
@@ -90,6 +90,7 @@ export const PreviewMessage = ({
 
                 if (state === "result") {
                   const { result } = toolInvocation;
+                  console.log("Tool result:", result); // Add logging to debug
 
                   return (
                     <div key={toolCallId}>
@@ -98,9 +99,7 @@ export const PreviewMessage = ({
                       ) : toolName === "get_course_info" ? (
                         <CourseInformation
                           courseInfo={
-                            result?.course_info && result?.professor_info
-                              ? result
-                              : { course_info: result?.course_info || result || [], professor_info: result?.professor_info || [] }
+                            typeof result === 'string' ? JSON.parse(result) : result
                           }
                         />
                       ) : (
@@ -110,25 +109,50 @@ export const PreviewMessage = ({
                   );
                 }
                 if (state === "call") {
+                  const [steps, setSteps] = useState([false, false, false, false]);
+
+                  useEffect(() => {
+                    const timers = [
+                      setTimeout(() => setSteps(prev => [true, prev[1], prev[2], prev[3]]), 3000),
+                      setTimeout(() => setSteps(prev => [prev[0], true, prev[2], prev[3]]), 8000),
+                      setTimeout(() => setSteps(prev => [prev[0], prev[1], true, prev[3]]), 13000),
+                      setTimeout(() => setSteps(prev => [prev[0], prev[1], prev[2], true]), 18000)
+                    ];
+                    return () => timers.forEach(timer => clearTimeout(timer));
+                  }, []);
+
                   return (
                     <div key={toolCallId} className="text-muted-foreground relative">
-                      <motion.div initial={{ opacity: 1 }} animate={{ opacity: 1 }}>
-                        Looking for University DataCommons...
+                      <motion.div initial={{ opacity: 1 }} animate={{ opacity: 1 }} className="flex items-center gap-2">
+                        Initiating Data Analyst Agent...
+                        {steps[0] && <CheckIcon className="text-green-500" size={16} />}
                       </motion.div>
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 5, duration: 0.5 }}
+                        className="flex items-center gap-2"
                       >
-                        Looking for Rate My Professor...
+                        Looking for University DataCommons...
+                        {steps[1] && <CheckIcon className="text-green-500" size={16} />}
                       </motion.div>
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 10, duration: 0.5 }}
-                        className="mt-4"
+                        transition={{ delay: 8, duration: 0.5 }}
+                        className="flex items-center gap-2"
+                      >
+                        Looking for Rate My Professor...
+                        {steps[2] && <CheckIcon className="text-green-500" size={16} />}
+                      </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 13, duration: 0.5 }}
+                        className="flex items-center gap-2"
                       >
                         Combining information...
+                        {steps[3] && <CheckIcon className="text-green-500" size={16} />}
                       </motion.div>
                     </div>
                   );
@@ -188,7 +212,7 @@ export const ThinkingMessage = () => {
 
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-col gap-4 text-muted-foreground">
-          Thinking...
+          Reasoning...
           </div>
         </div>
       </div>

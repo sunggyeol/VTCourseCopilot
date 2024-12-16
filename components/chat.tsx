@@ -3,8 +3,6 @@
 import { PreviewMessage, ThinkingMessage } from "@/components/message";
 import { MultimodalInput } from "@/components/multimodal-input";
 import { Overview } from "@/components/overview";
-import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
-import { ToolInvocation } from "ai";
 import { useChat } from "ai/react";
 import { toast } from "sonner";
 
@@ -31,13 +29,11 @@ export function Chat() {
     },
   });
 
-  const [messagesContainerRef, messagesEndRef] =
-    useScrollToBottom<HTMLDivElement>();
+  // Remove useScrollToBottom hook
 
   return (
     <div className="flex flex-col min-w-0 h-[calc(100dvh-52px)] bg-background">
       <div
-        ref={messagesContainerRef}
         className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
       >
         {messages.length === 0 && <Overview />}
@@ -56,11 +52,6 @@ export function Chat() {
           messages[messages.length - 1].toolInvocations?.some(
             (tool) => tool.state === "call"
           ) && <ThinkingMessage />}
-
-        <div
-          ref={messagesEndRef}
-          className="shrink-0 min-w-[24px] min-h-[24px]"
-        />
       </div>
 
       <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
