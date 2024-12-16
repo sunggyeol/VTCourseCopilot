@@ -22,8 +22,8 @@ import { Textarea } from "./ui/textarea";
 const suggestedActions = [
   {
     title: "Find best professor",
-    label: "for CS 3114",
-    action: "Help me find the best professor for CS 3114",
+    label: "for CS 2506",
+    action: "Help me find the best professor for CS 2506",
   },
   {
     title: "Highest GPA professor",

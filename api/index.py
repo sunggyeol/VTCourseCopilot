@@ -9,6 +9,7 @@ from fastapi.responses import StreamingResponse
 from openai import OpenAI
 from .utils.prompt import ClientMessage, convert_to_openai_messages
 from .utils.tools import get_current_weather
+from .services.course_info import get_course_info
 
 
 load_dotenv(".env.local")
@@ -26,6 +27,7 @@ class Request(BaseModel):
 
 available_tools = {
     "get_current_weather": get_current_weather,
+    "get_course_info": get_course_info,
 }
 
 def do_stream(messages: List[ChatCompletionMessageParam]):
@@ -51,6 +53,23 @@ def do_stream(messages: List[ChatCompletionMessageParam]):
                         },
                     },
                     "required": ["latitude", "longitude"],
+                },
+            },
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "get_course_info",
+                "description": "Get information about a VT course and its professors",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "course": {
+                            "type": "string",
+                            "description": "Course code in format 'CS 3114' or 'MATH 2114'",
+                        },
+                    },
+                    "required": ["course"],
                 },
             },
         }]
@@ -84,6 +103,23 @@ def stream_text(messages: List[ChatCompletionMessageParam], protocol: str = 'dat
                         },
                     },
                     "required": ["latitude", "longitude"],
+                },
+            },
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "get_course_info",
+                "description": "Get information about a VT course and its professors",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "course": {
+                            "type": "string",
+                            "description": "Course code in format 'CS 3114' or 'MATH 2114'",
+                        },
+                    },
+                    "required": ["course"],
                 },
             },
         }]

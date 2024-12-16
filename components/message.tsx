@@ -8,6 +8,48 @@ import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { cn } from "@/lib/utils";
 import { Weather } from "./weather";
+import { CourseInformation } from "./course_information";
+
+const SAMPLE_COURSE_INFO = {
+  course_info: [
+    {
+      "Academic Year": "2024",
+      Term: "Fall",
+      Subject: "CS",
+      "Course No.": "101",
+      "Course Title": "Introduction to Computer Science",
+      Instructor: "John Doe",
+      GPA: 3.5,
+      "A (%)": 30,
+      "A- (%)": 20,
+      "B+ (%)": 15,
+      "B (%)": 10,
+      "B- (%)": 5,
+      "C+ (%)": 5,
+      "C (%)": 5,
+      "C- (%)": 3,
+      "D+ (%)": 2,
+      "D (%)": 2,
+      "D- (%)": 1,
+      "F (%)": 2,
+      Withdraws: 1,
+      "Graded Enrollment": 100,
+      CRN: 12345,
+      Credits: 3,
+    },
+  ],
+  professor_info: [
+    {
+      name: "John Doe",
+      department: "Computer Science",
+      school: "Engineering",
+      rating: 4.5,
+      difficulty: 3.0,
+      num_ratings: 50,
+      would_take_again: 90,
+    },
+  ],
+};
 
 export const PreviewMessage = ({
   message,
@@ -53,9 +95,41 @@ export const PreviewMessage = ({
                     <div key={toolCallId}>
                       {toolName === "get_current_weather" ? (
                         <Weather weatherAtLocation={result} />
+                      ) : toolName === "get_course_info" ? (
+                        <CourseInformation
+                          courseInfo={
+                            result?.course_info && result?.professor_info
+                              ? result
+                              : { course_info: result?.course_info || result || [], professor_info: result?.professor_info || [] }
+                          }
+                        />
                       ) : (
                         <pre>{JSON.stringify(result, null, 2)}</pre>
                       )}
+                    </div>
+                  );
+                }
+                if (state === "call") {
+                  return (
+                    <div key={toolCallId} className="text-muted-foreground relative">
+                      <motion.div initial={{ opacity: 1 }} animate={{ opacity: 1 }}>
+                        Looking for University DataCommons...
+                      </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 5, duration: 0.5 }}
+                      >
+                        Looking for Rate My Professor...
+                      </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 10, duration: 0.5 }}
+                        className="mt-4"
+                      >
+                        Combining information...
+                      </motion.div>
                     </div>
                   );
                 }
@@ -63,10 +137,11 @@ export const PreviewMessage = ({
                   <div
                     key={toolCallId}
                     className={cn({
-                      skeleton: ["get_current_weather"].includes(toolName),
+                      skeleton: ["get_current_weather", "get_course_info"].includes(toolName),
                     })}
                   >
                     {toolName === "get_current_weather" ? <Weather /> : null}
+                    {toolName === "get_course_info" ? <CourseInformation courseInfo={SAMPLE_COURSE_INFO} /> : null}
                   </div>
                 );
               })}
@@ -113,7 +188,7 @@ export const ThinkingMessage = () => {
 
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-col gap-4 text-muted-foreground">
-            Thinking...
+          Thinking...
           </div>
         </div>
       </div>

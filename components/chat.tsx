@@ -53,7 +53,9 @@ export function Chat() {
 
         {isLoading &&
           messages.length > 0 &&
-          messages[messages.length - 1].role === "user" && <ThinkingMessage />}
+          messages[messages.length - 1].toolInvocations?.some(
+            (tool) => tool.state === "call"
+          ) && <ThinkingMessage />}
 
         <div
           ref={messagesEndRef}
@@ -74,6 +76,10 @@ export function Chat() {
           append={append}
         />
       </form>
+
+      <p className="text-sm text-gray-500 italic text-center pb-2">
+        This tool is not officially affiliated with or endorsed by Virginia Tech.
+      </p>
     </div>
   );
 }

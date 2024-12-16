@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
 
 export const metadata = {
-  title: "AI SDK Python Streaming Preview",
+  title: "VT Course Copilot",
   description:
-    "Use the Data Stream Protocol to stream chat completions from a Python endpoint (FastAPI) and display them using the useChat hook in your Next.js application.",
+  "Finding the best professors for course registration at Virginia Tech. It gathers information from University Data Commons and Rate My Professors to help students make informed decisions about their courses.",
   openGraph: {
     images: [
       {

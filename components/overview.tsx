@@ -55,9 +55,6 @@ export const Overview = () => {
           </Link>{" "}
           to provide even more comprehensive insights.
         </p>
-        <p className="text-sm text-gray-500 italic">
-          This tool is not officially affiliated with or endorsed by Virginia Tech.
-        </p>
         <p>
           This project was created by{" "}
           <Link

@@ -21,7 +21,7 @@ def get_udc(course: str) -> str:
 
     # Get the absolute path to the CSV file 
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    csv_path = os.path.join(current_dir, '../../../data/grade_distribution.csv')
+    csv_path = os.path.join(current_dir, '../../data/grade_distribution.csv')
 
     # Read the CSV file
     try:

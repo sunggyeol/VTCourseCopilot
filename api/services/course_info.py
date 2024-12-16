@@ -1,6 +1,6 @@
 import json
-from udc.universitydatacommons import get_udc
-from rmp.ratemyprocessor import get_professor_info
+from .universitydatacommons import get_udc
+from .ratemyprocessor import get_professor_info
 
 def get_course_info(course: str) -> str:
     """
@@ -44,7 +44,7 @@ def get_course_info(course: str) -> str:
         return json.dumps({"course_info": [], "professor_info": []})
 
 if __name__ == "__main__":
-    # Test the function
-    course = "CS 3114"
+    course = "CS 2506"
     result = get_course_info(course)
-    print(result)
+    with open("course_info_"+course+".json", "w") as f:
+        f.write(result)
