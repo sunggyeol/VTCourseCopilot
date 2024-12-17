@@ -28,7 +28,7 @@ def get_db_path():
     """Get the absolute path to the database file"""
     try:
         storage_paths = init_storage_directories()
-        db_path = os.path.join(storage_paths['db'], 'grade_distribution.db')
+        db_path = os.path.join(storage_paths['db'], 'grade_distribution_subject.db')
         
         if not os.path.exists(db_path):
             print(f"Warning: Database file not found at {db_path}")
@@ -59,16 +59,60 @@ def get_course_data(subject: str, course_no: int) -> List[Dict[str, Any]]:
         print("Successfully connected to the database")
         
         cursor = conn.cursor()
+        table_name = f"subj_{subject.upper()}"
         
-        query = """
-        SELECT * FROM grades 
-        WHERE Subject = ? AND "Course No." = ?
-        ORDER BY "Academic Year" DESC, Term DESC
-        """
-        cursor.execute(query, (subject, course_no))
+        # Try the new table format first
+        try:
+            query = f"""
+            SELECT * FROM {table_name}
+            WHERE subject = ? AND course_no = ?
+            ORDER BY academic_year DESC, term DESC
+            """
+            cursor.execute(query, (subject, course_no))
+            
+        except sqlite3.OperationalError:
+            # If new format fails, try the old format
+            print("Falling back to old table format...")
+            query = """
+            SELECT * FROM grades 
+            WHERE Subject = ? AND "Course No." = ?
+            ORDER BY "Academic Year" DESC, Term DESC
+            """
+            cursor.execute(query, (subject, course_no))
         
         columns = [description[0] for description in cursor.description]
-        course_data = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        rows = cursor.fetchall()
+        
+        # Convert column names to match the old format if needed
+        column_mapping = {
+            'academic_year': 'Academic Year',
+            'term': 'Term',
+            'subject': 'Subject',
+            'course_no': 'Course No.',
+            'course_title': 'Course Title',
+            'instructor': 'Instructor',
+            'gpa': 'GPA',
+            'a_percent': 'A (%)',
+            'a_minus_percent': 'A- (%)',
+            'b_plus_percent': 'B+ (%)',
+            'b_percent': 'B (%)',
+            'b_minus_percent': 'B- (%)',
+            'c_plus_percent': 'C+ (%)',
+            'c_percent': 'C (%)',
+            'c_minus_percent': 'C- (%)',
+            'd_plus_percent': 'D+ (%)',
+            'd_percent': 'D (%)',
+            'd_minus_percent': 'D- (%)',
+            'f_percent': 'F (%)',
+            'withdraws': 'Withdraws',
+            'graded_enrollment': 'Graded Enrollment',
+            'crn': 'CRN',
+            'credits': 'Credits'
+        }
+        
+        # Map the column names back to the original format
+        mapped_columns = [column_mapping.get(col, col) for col in columns]
+        course_data = [dict(zip(mapped_columns, row)) for row in rows]
         
         print("Closing database connection")
         conn.close()
