@@ -28,8 +28,7 @@ def get_db_path():
     """Get the absolute path to the database file"""
     try:
         storage_paths = init_storage_directories()
-        db_path = os.path.join(storage_paths['db'], 'grade_distribution_subject.db')
-        
+        db_path = os.path.join(storage_paths['db'], 'grade_distribution', 'grade_distribution_subject.db')
         if not os.path.exists(db_path):
             print(f"Warning: Database file not found at {db_path}")
         return db_path
