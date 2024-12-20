@@ -96,35 +96,39 @@ export function CourseInformation({ courseInfo }: { courseInfo: CombinedInfo }) 
       <h2 className="text-xl font-bold mb-4 text-white">Course GPA by Professors</h2>
       
       {selectedCourse && (
-        <div className="w-full h-[300px] mb-4 bg-gray-900/90 p-4 rounded-lg shadow-lg">
-          <Bar
-            data={getGraphData(selectedCourse)}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: 'top' as const,
-                  labels: {
-                    color: 'white'
+        <div className="overflow-x-auto pb-2">
+          <div className="flex gap-2 min-w-[600px]">
+            <div className="w-full h-[300px] mb-4 bg-gray-900/90 p-4 rounded-lg shadow-lg">
+              <Bar
+                data={getGraphData(selectedCourse)}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: 'top' as const,
+                      labels: {
+                        color: 'white'
+                      }
+                    },
+                    title: {
+                      display: true,
+                      text: `Grade Distribution - ${selectedCourse['Academic Year']} ${selectedCourse.Term}`,
+                      color: 'white'
+                    },
+                  },
+                  scales: {
+                    y: {
+                      ticks: { color: 'white' }
+                    },
+                    x: {
+                      ticks: { color: 'white' }
+                    }
                   }
-                },
-                title: {
-                  display: true,
-                  text: `Grade Distribution - ${selectedCourse['Academic Year']} ${selectedCourse.Term}`,
-                  color: 'white'
-                },
-              },
-              scales: {
-                y: {
-                  ticks: { color: 'white' }
-                },
-                x: {
-                  ticks: { color: 'white' }
-                }
-              }
-            }}
-          />
+                }}
+              />
+            </div>
+          </div>
         </div>
       )}
 

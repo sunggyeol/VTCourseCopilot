@@ -2,12 +2,11 @@
 
 import type { Message } from "ai";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SparklesIcon, CheckIcon } from "./icons";
 import { Markdown } from "./markdown";
 import { PreviewAttachment } from "./preview-attachment";
 import { cn } from "@/lib/utils";
-import { Weather } from "./weather";
 import { CourseInformation } from "./course_information";
 
 const SAMPLE_COURSE_INFO = {
@@ -16,7 +15,7 @@ const SAMPLE_COURSE_INFO = {
       "Academic Year": "2023-24",
       Term: "Spring",
       Subject: "CS",
-      "Course No.": 2506,  // Changed to number
+      "Course No.": 2506,
       "Course Title": "Intro to Computer Organization",
       Instructor: "Nikolopoulos",
       GPA: 3.18,
@@ -59,6 +58,17 @@ export const PreviewMessage = ({
   isLoading: boolean;
 }) => {
   const [steps, setSteps] = useState([false, false, false, false]);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (message.content || message.toolInvocations) {
+      scrollToBottom();
+    }
+  }, [message.content, message.toolInvocations]);
 
   useEffect(() => {
     const timers = [
@@ -70,9 +80,27 @@ export const PreviewMessage = ({
     return () => timers.forEach(timer => clearTimeout(timer));
   }, []);
 
+  const showSparklesIcon = (
+    message.role === "assistant" &&
+    (
+      (message.content && message.content.trim().length > 0) ||
+      message.toolInvocations?.some((invocation) => {
+        if (invocation.state === "call") {
+          return true;
+        }
+        if (invocation.toolName === "get_course_info" && invocation.state === "result") {
+          const { result } = invocation;
+          const data = typeof result === 'string' ? JSON.parse(result) : result;
+          return data?.course_info?.length > 0;
+        }
+        return false;
+      })
+    )
+  );
+
   return (
     <motion.div
-      className="w-full mx-auto max-w-3xl px-4 group/message"
+      className="w-full mx-auto max-w-3xl px-4 group/message mb-8"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       data-role={message.role}
@@ -82,13 +110,13 @@ export const PreviewMessage = ({
           "group-data-[role=user]/message:bg-primary group-data-[role=user]/message:text-primary-foreground flex gap-4 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl",
         )}
       >
-        {message.role === "assistant" && (
+        {showSparklesIcon && (
           <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border">
             <SparklesIcon size={14} />
           </div>
         )}
 
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-full overflow-x-hidden">
           {message.content && (
             <div className="flex flex-col gap-4">
               <Markdown>{message.content as string}</Markdown>
@@ -106,16 +134,18 @@ export const PreviewMessage = ({
 
                   return (
                     <div key={toolCallId}>
-                      {toolName === "get_current_weather" ? (
-                        <Weather weatherAtLocation={result} />
-                      ) : toolName === "get_course_info" ? (
-                        <CourseInformation
-                          courseInfo={
-                            typeof result === 'string' ? JSON.parse(result) : result
-                          }
-                        />
+                      {toolName === "get_course_info" ? (
+                        <div className="overflow-x-auto">
+                          {typeof result === 'string' 
+                            ? (JSON.parse(result)?.course_info?.length > 0 && 
+                               <CourseInformation courseInfo={JSON.parse(result)} />)
+                            : (result?.course_info?.length > 0 && 
+                               <CourseInformation courseInfo={result} />)}
+                        </div>
                       ) : (
-                        <pre>{JSON.stringify(result, null, 2)}</pre>
+                        <pre className="whitespace-pre-wrap break-words overflow-x-hidden">
+                          {JSON.stringify(result, null, 2)}
+                        </pre>
                       )}
                     </div>
                   );
@@ -133,7 +163,7 @@ export const PreviewMessage = ({
                         transition={{ delay: 5, duration: 0.5 }}
                         className="flex items-center gap-2"
                       >
-                        Looking for University DataCommons...
+                          Analyzing University DataCommons...
                         {steps[1] && <CheckIcon className="text-green-500" size={16} />}
                       </motion.div>
                       <motion.div
@@ -142,7 +172,7 @@ export const PreviewMessage = ({
                         transition={{ delay: 8, duration: 0.5 }}
                         className="flex items-center gap-2"
                       >
-                        Looking for Rate My Professor...
+                        Analyzing Rate My Professor...
                         {steps[2] && <CheckIcon className="text-green-500" size={16} />}
                       </motion.div>
                       <motion.div
@@ -161,10 +191,9 @@ export const PreviewMessage = ({
                   <div
                     key={toolCallId}
                     className={cn({
-                      skeleton: ["get_current_weather", "get_course_info"].includes(toolName),
+                      skeleton: ["get_course_info"].includes(toolName),
                     })}
                   >
-                    {toolName === "get_current_weather" ? <Weather /> : null}
                     {toolName === "get_course_info" ? <CourseInformation courseInfo={SAMPLE_COURSE_INFO} /> : null}
                   </div>
                 );
@@ -182,6 +211,7 @@ export const PreviewMessage = ({
               ))}
             </div>
           )}
+          <div ref={bottomRef} /> {/* Add this at the end of the content */}
         </div>
       </div>
     </motion.div>
