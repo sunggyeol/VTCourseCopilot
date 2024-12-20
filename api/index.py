@@ -8,7 +8,6 @@ from fastapi import FastAPI, Query
 from fastapi.responses import StreamingResponse
 from openai import OpenAI
 from .utils.prompt import ClientMessage, convert_to_openai_messages
-from .utils.tools import get_current_weather
 from .services.course_info import get_course_info
 
 
@@ -26,7 +25,6 @@ class Request(BaseModel):
 
 
 available_tools = {
-    "get_current_weather": get_current_weather,
     "get_course_info": get_course_info,
 }
 
