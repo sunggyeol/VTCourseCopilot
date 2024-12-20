@@ -3,7 +3,7 @@
 import { Button } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import sunggyeol_logo from "../data/logo/sunggyeol_logo.svg";
+import sunggyeol_logo from "../public/sunggyeol_logo.svg";
 
 export const Navbar = () => {
   return (
